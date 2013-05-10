@@ -1,0 +1,37 @@
+SELECT inventory.inv_id
+     , inventory.item_name
+     , inventory.item_property_code
+     , inventory.item_serial_number
+     , inventory_details.remarks
+     , inventory_details.school_year 
+  FROM inventory 
+INNER
+  JOIN inventory_details
+    ON inventory_details.inv_id = inventory.inv_id
+   AND inventory_details.school_year = 
+       ( SELECT MAX(school_year)
+           FROM inventory_details 
+          WHERE inv_id = inventory.inv_id )
+
+/////////////////////////////////////////////////////////////////
+
+SELECT inventory.inv_id
+     , inventory.item_name
+     , inventory.item_property_code
+     , inventory.item_serial_number
+     , inventory_details.remarks
+     , inventory_details.school_year 
+  FROM inventory 
+INNER 
+  JOIN ( SELECT inv_id
+              , MAX(school_year) AS max_year
+          FROM inventory_details 
+         GROUP
+             BY inv_id ) AS inv_maxes
+    ON inv_maxes.inv_id = inventory.inv_id
+INNER
+  JOIN inventory_details
+    ON inventory_details.inv_id = inv_maxes.inv_id
+   AND inventory_details.school_year = inv_maxes.max_year
+
+///////////////////////////////////
