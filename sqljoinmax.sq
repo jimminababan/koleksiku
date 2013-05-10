@@ -5,12 +5,4 @@ INNER JOIN (
      FROM student_school
      GROUP BY student_id
 ) AS b ON b.student_id = students.id
-SELECT students.id
-FROM students
-INNER JOIN (
-
-SELECT MAX( id ) , student_id
-FROM student_school
-GROUP BY student_id
-) AS b ON b.student_id = students.id
 LIMIT 0 , 30
